@@ -20,11 +20,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // Create participants section
+        let participantsSection = `
+          <div class="participants-section">
+            <strong>Partecipanti:</strong>
+            ${
+              details.participants.length > 0
+                ? `<ul class="participants-list">
+                    ${details.participants
+                      .map(
+                        (p) =>
+                          `<li class="participant-item">${p}</li>`
+                      )
+                      .join("")}
+                  </ul>`
+                : `<span class="no-participants">Nessun partecipante ancora</span>`
+            }
+          </div>
+        `;
+
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          ${participantsSection}
         `;
 
         activitiesList.appendChild(activityCard);
@@ -35,6 +55,30 @@ document.addEventListener("DOMContentLoaded", () => {
         option.textContent = name;
         activitySelect.appendChild(option);
       });
+
+      // Add some basic styles for participants section
+      const style = document.createElement("style");
+      style.textContent = `
+        .participants-section {
+          margin-top: 10px;
+          padding: 8px;
+          background: #f7f7fa;
+          border-radius: 6px;
+        }
+        .participants-list {
+          margin: 6px 0 0 18px;
+          padding: 0;
+        }
+        .participant-item {
+          margin-bottom: 2px;
+          color: #2d3a4a;
+        }
+        .no-participants {
+          color: #888;
+          font-style: italic;
+        }
+      `;
+      document.head.appendChild(style);
     } catch (error) {
       activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";
       console.error("Error fetching activities:", error);
